@@ -5,6 +5,7 @@ import { CreateProductDTO, Product, UpdateProductDTO } from '../models/product.m
 import { environment } from '../../environments/environment';
 import { generateManyProducts, generateOneProduct } from '../models/product.mock';
 import * as _ from 'lodash';
+import { HttpStatusCode } from '@angular/common/http';
 
 fdescribe('ProductsService', () => {
   let productsService: ProductsService;
@@ -141,7 +142,7 @@ fdescribe('ProductsService', () => {
       req.flush(mockData);
       expect(req.request.body).toEqual(dto);
       expect(req.request.method).toEqual('POST');
-    })
+    });
   });
 
   describe('tests for update', () => {
@@ -162,7 +163,7 @@ fdescribe('ProductsService', () => {
       req.flush(mockData);
       expect(req.request.body).toEqual(dto);
       expect(req.request.method).toEqual('PUT');
-    })
+    });
   });
 
   describe('tests for delete', () => {
@@ -179,6 +180,45 @@ fdescribe('ProductsService', () => {
       const req = httpController.expectOne(url);
       req.flush(mockData);
       expect(req.request.method).toEqual('DELETE');
-    })
+    });
+  });
+
+  describe('tests for getOne', () => {
+    it('should return a product', (doneFn) => {
+      const mockData = generateOneProduct();
+      const productId = '1';
+
+      productsService.getOne(productId).subscribe((product) => {
+        expect(product).toEqual(mockData);
+        doneFn();
+      });
+
+      const url = `${environment.API_URL}/api/v1/products/${productId}`;
+      const req = httpController.expectOne(url);
+      req.flush(mockData);
+      expect(req.request.method).toEqual('GET');
+    });
+
+    it('should return the right msg when the status code is 404', (doneFn) => {
+      const productId = '1';
+      const msgError = '404 message';
+      const mockError = {
+        status: HttpStatusCode.NotFound,
+        statusText: msgError,
+      };
+
+      productsService.getOne(productId)
+        .subscribe({
+          error: (error) => {
+            expect(error).toEqual('El producto no existe');
+            doneFn();
+          },
+        });
+
+      const url = `${environment.API_URL}/api/v1/products/${productId}`;
+      const req = httpController.expectOne(url);
+      req.flush(msgError, mockError);
+      expect(req.request.method).toEqual('GET');
+    });
   });
 });
