@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ProductsService } from './products.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { CreateProductDTO, Product } from '../models/product.model';
+import { CreateProductDTO, Product, UpdateProductDTO } from '../models/product.model';
 import { environment } from '../../environments/environment';
 import { generateManyProducts, generateOneProduct } from '../models/product.mock';
 import * as _ from 'lodash';
@@ -141,6 +141,44 @@ fdescribe('ProductsService', () => {
       req.flush(mockData);
       expect(req.request.body).toEqual(dto);
       expect(req.request.method).toEqual('POST');
+    })
+  });
+
+  describe('tests for update', () => {
+    it('should update a product', (doneFn) => {
+      const mockData = generateOneProduct();
+      const dto: UpdateProductDTO = {
+        title: 'New product',
+      };
+      const productId = '1';
+
+      productsService.update(productId, _.cloneDeep(dto)).subscribe((product) => {
+        expect(product).toEqual(mockData);
+        doneFn();
+      });
+
+      const url = `${environment.API_URL}/api/v1/products/${productId}`;
+      const req = httpController.expectOne(url);
+      req.flush(mockData);
+      expect(req.request.body).toEqual(dto);
+      expect(req.request.method).toEqual('PUT');
+    })
+  });
+
+  describe('tests for delete', () => {
+    it('should delete a product', (doneFn) => {
+      const mockData = true;
+      const productId = '1';
+
+      productsService.delete(productId).subscribe((product) => {
+        expect(product).toEqual(mockData);
+        doneFn();
+      });
+
+      const url = `${environment.API_URL}/api/v1/products/${productId}`;
+      const req = httpController.expectOne(url);
+      req.flush(mockData);
+      expect(req.request.method).toEqual('DELETE');
     })
   });
 });
