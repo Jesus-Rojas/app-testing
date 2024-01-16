@@ -46,11 +46,11 @@ fdescribe('ProductsService', () => {
 
   describe('tests for getAll', () => {
     it('should return a product list', (doneFn) => {
-      const mockData: Product[] = generateManyProducts(5)
+      const mockData: Product[] = generateManyProducts(5);
 
       productsService.getAll().subscribe((products) => {
         expect(products.length).toEqual(mockData.length);
-        doneFn()
+        doneFn();
       });
 
       const url = `${environment.API_URL}/api/v1/products`;
@@ -68,6 +68,14 @@ fdescribe('ProductsService', () => {
         {
           ...generateOneProduct(),
           price: 200, // 200 * .19 = 38
+        },
+        {
+          ...generateOneProduct(),
+          price: 0, // 0 * .19 = 0
+        },
+        {
+          ...generateOneProduct(),
+          price: -100, // -100 * .19 = 0
         }
       ];
 
@@ -75,12 +83,38 @@ fdescribe('ProductsService', () => {
         expect(products.length).toEqual(mockData.length);
         expect(products[0].taxes).toEqual(19);
         expect(products[1].taxes).toEqual(38);
-        doneFn()
+        expect(products[2].taxes).toEqual(0);
+        expect(products[3].taxes).toEqual(0);
+        doneFn();
       });
 
       const url = `${environment.API_URL}/api/v1/products`;
       const req = httpController.expectOne(url);
       req.flush(mockData);
+      httpController.verify();
+    });
+
+    it('should send query params with limit 10 and offset 3', (doneFn) => {
+      const mockData: Product[] = generateManyProducts(3);
+      const limit = 10;
+      const offset = 3;
+      const parseToQueryParams = (object: Record<string, unknown>) => {
+        return Object.keys(object)
+          .reduce<string[]>((acc, key) => ([...acc, `${key}=${object[key]}`]), [])
+          .join('&');
+      }
+
+      productsService.getAll(limit, offset).subscribe((products) => {
+        expect(products.length).toEqual(mockData.length);
+        doneFn();
+      });
+
+      const url = `${environment.API_URL}/api/v1/products?${parseToQueryParams({ limit, offset })}`;
+      const req = httpController.expectOne(url);
+      req.flush(mockData);
+      const params = req.request.params;
+      expect(params.get('limit')).toEqual(limit.toString());
+      expect(params.get('offset')).toEqual(offset.toString());
       httpController.verify();
     });
   });
