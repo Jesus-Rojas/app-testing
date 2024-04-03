@@ -1,13 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import * as _ from 'lodash';
 
 import { TokenService } from './token.service';
 import { AuthService } from './auth.service';
 import { Auth } from '../models/auth.model';
 import { environment } from '../../environments/environment';
 
-fdescribe('AuthService', () => {
+describe('AuthService', () => {
   let authService: AuthService;
   let tokenService: TokenService;
   let httpController: HttpTestingController;
