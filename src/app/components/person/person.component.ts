@@ -8,4 +8,9 @@ import { Person } from 'src/app/models/person.model';
 })
 export class PersonComponent {
   @Input() person !: Person;
+  imc = '';
+
+  calcIMC() {
+    this.imc = this.person.calcIMC();
+  }
 }
