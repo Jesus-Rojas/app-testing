@@ -1,10 +1,11 @@
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { Person } from '../../models/person.model';
 import { PersonComponent } from './person.component';
 
-fdescribe('PersonComponent', () => {
+describe('PersonComponent', () => {
   let component: PersonComponent;
   let fixture: ComponentFixture<PersonComponent>;
 
@@ -77,5 +78,63 @@ fdescribe('PersonComponent', () => {
     fixture.detectChanges();
     // Assert
     expect(buttonElement?.textContent).toContain(expectedMsg);
+  });
+
+  it('should raise selected event when do click', () => {
+    // Arrange
+    const expectedPerson = new Person('Juan', 'Perez', 30, 120, 1.65);
+    component.person = expectedPerson;
+    const buttonDebug = fixture.debugElement.query(By.css('button.btn-choose'));
+    let selectedPerson: Person | undefined;
+    component.onSelected.subscribe((person) => (selectedPerson = person));
+    // Act
+    buttonDebug.triggerEventHandler('click');
+    fixture.detectChanges();
+    // Assert
+    expect(selectedPerson).toEqual(expectedPerson);
+  });
+});
+
+@Component({
+  template: '<app-person [person]="person" (onSelected)="onSelected($event)"></app-person>',
+})
+class HostComponent {
+  person = new Person('Juan', 'Perez', 30, 120, 1.65);
+  selectedPerson: Person | undefined = undefined;
+
+  onSelected(person: Person) {
+    this.selectedPerson = person;
+  }
+}
+
+fdescribe('PersonComponent from HostComponent', () => {
+  let component: HostComponent;
+  let fixture: ComponentFixture<HostComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ HostComponent, PersonComponent ]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(HostComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should display person name', () => {
+    const expectedName = component.person.name;
+    const personElement: HTMLElement = fixture.debugElement.query(By.css('app-person h3')).nativeElement;
+    expect(personElement?.textContent).toContain(expectedName);
+  });
+
+  it('should raise selected event when clicked', () => {
+    const personDebug = fixture.debugElement.query(By.css('app-person .btn-choose'));
+    personDebug.triggerEventHandler('click');
+    expect(component.selectedPerson).toEqual(component.person);
   });
 });
