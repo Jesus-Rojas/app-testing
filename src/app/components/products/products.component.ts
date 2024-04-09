@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from 'src/app/models/product.model';
 import { ProductsService } from 'src/app/services/products.service';
+import { Status } from 'src/app/types/status.enum';
 
 @Component({
   selector: 'app-products',
@@ -9,6 +10,10 @@ import { ProductsService } from 'src/app/services/products.service';
 })
 export class ProductsComponent implements OnInit {
   products: Product[] = [];
+  limit = 10;
+  offset = 0;
+  status: Status = Status.Init;
+  Status = Status;
 
   constructor(
     private productsService: ProductsService
@@ -19,8 +24,9 @@ export class ProductsComponent implements OnInit {
   }
 
   getAllProducts() {
+    this.status = Status.Loading;
     this.productsService
-      .getAll()
+      .getAll(this.limit, this.offset)
       .subscribe((products) => {
         products = products.map(product => {
           if (product.images[0].includes('[')) {
@@ -39,9 +45,14 @@ export class ProductsComponent implements OnInit {
 
         const productsImagesNotFound = products
           .filter((product) => product.images.some((image) => imagesNotFound.includes(image)))
-          .map((product) => product.id)
+          .map((product) => product.id);
         
-        this.products = products.filter((product) => !productsImagesNotFound.includes(product.id))
+        this.products = [
+          ...this.products,
+          ...products.filter((product) => !productsImagesNotFound.includes(product.id)),
+        ];
+        this.offset += this.limit;
+        this.status = Status.Success;
       });
   }
 }
