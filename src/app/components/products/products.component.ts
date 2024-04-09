@@ -20,7 +20,7 @@ export class ProductsComponent implements OnInit {
 
   getAllProducts() {
     this.productsService
-      .getAllSimple()
+      .getAll()
       .subscribe((products) => {
         products = products.map(product => {
           if (product.images[0].includes('[')) {
