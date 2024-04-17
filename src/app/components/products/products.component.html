@@ -1,6 +1,12 @@
 <section class="container">
   <h2>Products Component</h2>
 
+  <h3>Rta</h3>
+
+  <button (click)="callPromise()">Call promise</button>
+
+  <p>{{ rta }}</p>
+
   <div class="my-grid">
     <app-product 
       *ngFor="let product of products"
