@@ -27,32 +27,18 @@ export class ProductsComponent implements OnInit {
     this.status = Status.Loading;
     this.productsService
       .getAll(this.limit, this.offset)
-      .subscribe((products) => {
-        products = products.map(product => {
-          if (product.images[0].includes('[')) {
-            product.images = JSON.parse(product.images.join(','));
-          }
-          return product;
-        });
-
-        const imagesNotFound = [
-          'https://placeimg.com/640/480/any',
-          'https://placeimg.com/640/640/any',
-          'https://placeimg.com/640/48',
-          'https://img.com/64/1222',
-          'https://image.com'
-        ];
-
-        const productsImagesNotFound = products
-          .filter((product) => product.images.some((image) => imagesNotFound.includes(image)))
-          .map((product) => product.id);
-        
-        this.products = [
-          ...this.products,
-          ...products.filter((product) => !productsImagesNotFound.includes(product.id)),
-        ];
-        this.offset += this.limit;
-        this.status = Status.Success;
+      .subscribe({
+        next: (products) => {
+          this.products = [ ...this.products, ...products ];
+          this.offset += this.limit;
+          this.status = Status.Success;
+        },
+        error: () => {
+          setTimeout(() => {
+            this.products = [];
+            this.status = Status.Error;
+          }, 3000);
+        },
       });
   }
 }

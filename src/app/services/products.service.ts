@@ -17,17 +17,51 @@ export class ProductsService {
     private http: HttpClient
   ) { }
 
+  updateImages(products: Product[]) {
+    const imagesNotFound = [
+      'https://placeimg.com/640/480/any',
+      'https://placeimg.com/640/640/any',
+      'https://placeimg.com/640/48',
+      'https://img.com/64/1222',
+      'https://image.com'
+    ];
+
+    products = products.map(product => {
+      if (product.images[0].includes('[')) {
+        product.images = JSON.parse(product.images.join(','));
+      }
+      return product;
+    });
+
+    const productsImagesNotFound = products
+      .filter((product) => product.images.some((image) => imagesNotFound.includes(image)))
+      .map((product) => product.id);
+
+    return products.filter((product) => !productsImagesNotFound.includes(product.id));
+  }
+
   getByCategory(categoryId: string, limit?: number, offset?: number){
     let params = new HttpParams();
     if (limit && offset != null) {
       params = params.set('limit', limit);
       params = params.set('offset', offset);
     }
-    return this.http.get<Product[]>(`${this.apiUrl}/categories/${categoryId}/products`, { params })
+
+    return (
+      this
+        .http
+        .get<Product[]>(`${this.apiUrl}/categories/${categoryId}/products`, { params })
+        .pipe(map(this.updateImages))
+    );
   }
 
   getAllSimple() {
-    return this.http.get<Product[]>(`${this.apiUrl}/products`);
+    return (
+      this
+        .http
+        .get<Product[]>(`${this.apiUrl}/products`)
+        .pipe(map(this.updateImages))
+    );
   }
 
   getAll(limit?: number, offset?: number): Observable<Product[]> {
@@ -36,15 +70,21 @@ export class ProductsService {
       params = params.set('limit', limit);
       params = params.set('offset', offset);
     }
-    return this.http.get<Product[]>(`${this.apiUrl}/products`, { params })
-    .pipe(
-      retry(3),
-      map(products => products.map(item => {
-        return {
-          ...item,
-          taxes: item.price > 0 ? .19 * item.price : 0,
-        }
-      }))
+
+    return (
+      this
+        .http
+        .get<Product[]>(`${this.apiUrl}/products`, { params })
+        .pipe(
+          retry(3),
+          map((products) => (
+            products.map((product) => ({
+              ...product,
+              taxes: product.price > 0 ? .19 * product.price : 0,
+            }))
+          )),
+          map(this.updateImages),
+        )
     );
   }
 
@@ -58,6 +98,10 @@ export class ProductsService {
   getOne(id: string) {
     return this.http.get<Product>(`${this.apiUrl}/products/${id}`)
     .pipe(
+      map((product) => {
+        const [newProduct] = this.updateImages([product]);
+        return newProduct;
+      }),
       catchError((error: HttpErrorResponse) => {
         if (error.status === HttpStatusCode.Conflict) {
           return throwError(() => 'Algo esta fallando en el server');
