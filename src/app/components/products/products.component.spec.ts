@@ -6,7 +6,7 @@ import { generateManyProducts } from 'src/app/models/product.mock';
 import { ProductsService } from 'src/app/services/products.service';
 import { ValueService } from 'src/app/services/value.service';
 import { Status } from 'src/app/types/status.enum';
-import { observableError, observableSuccess, promiseSuccess, query, queryById } from 'src/testing';
+import { getText, observableError, observableSuccess, promiseSuccess, query, queryById } from 'src/testing';
 import { ProductComponent } from '../product/product.component';
 
 import { ProductsComponent } from './products.component';
@@ -118,9 +118,8 @@ describe('ProductsComponent', () => {
       tick();
       fixture.detectChanges();
 
-      const pEl: HTMLElement = query(fixture, '.p-rta').nativeElement;
       // Assert
-      expect(pEl?.textContent).toEqual(mockMessage);
+      expect(getText(fixture, 'p-rta')).toEqual(mockMessage);
       expect(valueService.getPromiseValue).toHaveBeenCalled();
     }));
   });
