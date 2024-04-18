@@ -15,7 +15,7 @@ import { HighligthDirective } from './highligth.directive';
 })
 class HostComponent { }
 
-fdescribe('HighligthDirective', () => {
+describe('HighligthDirective', () => {
   let component: HostComponent;
   let fixture: ComponentFixture<HostComponent>;
 
