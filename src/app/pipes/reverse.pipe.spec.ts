@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { query } from 'src/testing';
 import { ReversePipe } from './reverse.pipe';
 
 describe('ReversePipe', () => {
@@ -58,16 +59,13 @@ describe('ReversePipe from HostComponent', () => {
   });
 
   it('should the h5 be "roma"', () => {
-    const h5De = fixture.debugElement.query(By.css('h5'));
-    const h5El: HTMLElement = h5De.nativeElement;
+    const h5El: HTMLElement = query(fixture, 'h5').nativeElement;
     expect(h5El.textContent).toEqual('roma');
   });
 
   it('should apply reserve pipe when typing in the input', () => {
-    const inputDe = fixture.debugElement.query(By.css('input'));
-    const inputEl: HTMLInputElement = inputDe.nativeElement;
-    const pDe = fixture.debugElement.query(By.css('p'));
-    const pEl: HTMLElement = pDe.nativeElement;
+    const inputEl: HTMLInputElement = query(fixture, 'input').nativeElement;
+    const pEl: HTMLInputElement = query(fixture, 'p').nativeElement;
 
     expect(pEl?.textContent).toEqual('');
 

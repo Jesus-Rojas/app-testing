@@ -1,6 +1,9 @@
 <section class="container">
   <h3>Selected Person</h3>
-  <div *ngIf="selectedPerson" class="selectedPerson">
+  <div
+    *ngIf="selectedPerson"
+    data-test-id="selectedPerson"
+  >
     <ul>
       <li>Name: {{ selectedPerson.name }}</li>
       <li>Age: {{ selectedPerson.age }}</li>
