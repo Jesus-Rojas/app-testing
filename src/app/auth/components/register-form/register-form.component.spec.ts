@@ -7,6 +7,7 @@ import { Status } from 'src/app/types/status.enum';
 import {
   clickElementById,
   getTextById,
+  observableError,
   observableSuccess,
   query,
   setCheckboxValue,
@@ -149,4 +150,20 @@ fdescribe('RegisterFormComponent', () => {
     expect(usersService.create).toHaveBeenCalled();
   }));
 
+  it('should send the form demo UI but with error in the service', fakeAsync(() => {
+    setInputValue(fixture, '#name', 'Jesus');
+    setInputValue(fixture, '#email', 'jesus@gmail.com');
+    setInputValue(fixture, '#password', '00000000');
+    setInputValue(fixture, '#confirmPassword', '00000000');
+    setCheckboxValue(fixture, '#terms', true);
+
+    const mockUser = generateOneUser();
+    usersService.create.and.returnValue(observableError(mockUser));
+    clickElementById(fixture, 'btn-submit');
+    expect(component.status).toEqual(Status.Loading);
+    tick();
+    expect(component.status).toEqual(Status.Error);
+    expect(component.form.valid).toBeTruthy();
+    expect(usersService.create).toHaveBeenCalled();
+  }));
 });
