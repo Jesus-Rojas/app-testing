@@ -14,7 +14,11 @@ export class RegisterFormComponent {
   form = this.fb.group(
     {
       name: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
+      email: [
+        '',
+        [Validators.required, Validators.email],
+        [MyValidators.validateEmailAsync(this.usersService)]
+      ],
       password: ['', [Validators.required, Validators.minLength(6), MyValidators.validPassword]],
       confirmPassword: ['', [Validators.required]],
       checkTerms: [false, [Validators.requiredTrue]],
@@ -39,17 +43,12 @@ export class RegisterFormComponent {
       return;
     }
 
-    const value = this.form.value;
     this.status = Status.Loading;
     this.usersService
-      .create(value as CreateUserDTO)
+      .create(this.form.value as CreateUserDTO)
       .subscribe({
-        next: () => {
-          this.status = Status.Success;
-        },
-        error: () => {
-          this.status = Status.Error;
-        }
+        next: () => (this.status = Status.Success),
+        error: () => (this.status = Status.Error),
       });
   }
 

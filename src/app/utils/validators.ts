@@ -1,4 +1,6 @@
 import { AbstractControl } from '@angular/forms';
+import { map } from 'rxjs';
+import { UsersService } from '../auth/services/users.service';
 
 export class MyValidators {
 
@@ -17,6 +19,16 @@ export class MyValidators {
       throw new Error('matchPasswords: fields not found');
     }
     return password === confirmPassword ? null : { match_password: true };
+  }
+
+  static validateEmailAsync(service: UsersService) {
+    return ({ value }: AbstractControl) => (
+      service
+        .isAvailableByEmail(value)
+        .pipe(
+          map(({ isAvailable }) => (isAvailable ? null : { not_available: true }))
+        )
+    )
   }
 }
 
