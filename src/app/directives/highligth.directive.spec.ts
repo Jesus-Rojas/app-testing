@@ -45,9 +45,9 @@ describe('HighligthDirective', () => {
   it('should the elements be match with bgColor', () => {
     const elements: (Omit<DebugElement, 'nativeElement'> & { nativeElement: HTMLElement })[] = 
       fixture.debugElement.queryAll(By.directive(HighligthDirective));
-    expect(elements[0].nativeElement.style.backgroundColor).toEqual('gray');
-    expect(elements[1].nativeElement.style.backgroundColor).toEqual('yellow');
-    expect(elements[2].nativeElement.style.backgroundColor).toEqual('blue');
+    expect(elements[0].nativeElement?.style.backgroundColor).toEqual('gray');
+    expect(elements[1].nativeElement?.style.backgroundColor).toEqual('yellow');
+    expect(elements[2].nativeElement?.style.backgroundColor).toEqual('blue');
   });
 
   it('should the h5.title be defaultColor', () => {
