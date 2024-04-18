@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { Person } from 'src/app/models/person.model';
-import { getSelectorOfTest, query, queryAll, queryById } from 'src/testing';
+import { getSelectorOfTest, getText, queryAll, queryById } from 'src/testing';
 import { PersonComponent } from '../person/person.component';
 
 import { PeopleComponent } from './people.component';
@@ -46,7 +45,6 @@ describe('PeopleComponent', () => {
     const buttonDe = queryById(fixture, 'btn-choose');
     buttonDe.triggerEventHandler('click');
     fixture.detectChanges();
-    const liEl: HTMLElement = query(fixture, `${getSelectorOfTest('selectedPerson')} ul > li`).nativeElement;
-    expect(liEl?.textContent).toContain(component.selectedPerson?.name);
+    expect(getText(fixture, `${getSelectorOfTest('selectedPerson')} ul > li`)).toContain(component.selectedPerson?.name);
   });
 });

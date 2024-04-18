@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { query, queryById } from 'src/testing';
+import { getText, getTextById, query, queryById } from 'src/testing';
 
 import { Person } from '../../models/person.model';
 import { PersonComponent } from './person.component';
@@ -34,34 +33,31 @@ describe('PersonComponent', () => {
   it('should have <p> with "Mi altura es {{ person.heigth }}"', () => {
     // Arrange
     component.person = new Person('Valentina', 'Molina', 23, 65, 1.65);
-    const pEl: HTMLElement = query(fixture, 'p').nativeElement;
     // Act
     fixture.detectChanges();
     // Assert
-    expect(pEl?.textContent).toContain(component.person.heigth);
+    expect(getText(fixture, 'p')).toContain(component.person.heigth);
   });
 
   it('should have <h3> with "Hola, {{ person.name }}"', () => {
     // Arrange
     component.person = new Person('Valentina', 'Molina', 23, 65, 1.65);
     const expectedMsg = `Hola, ${component.person.name}`;
-    const h3El: HTMLElement = query(fixture, 'h3').nativeElement;
     // Act
     fixture.detectChanges();
     // Assert
-    expect(h3El?.textContent).toEqual(expectedMsg);
+    expect(getText(fixture, 'h3')).toEqual(expectedMsg);
   });
 
   it('should display a text with IMC when call calcIMC', () => {
     // Arrange
     const expectedMsg = 'overweigth level';
     component.person = new Person('Juan', 'Perez', 30, 120, 1.65);
-    const buttonEl: HTMLElement = queryById(fixture, 'btn-imc').nativeElement;
     // Act
     component.calcIMC();
     fixture.detectChanges();
     // Assert
-    expect(buttonEl?.textContent).toContain(expectedMsg);
+    expect(getTextById(fixture, 'btn-imc')).toContain(expectedMsg);
   });
 
   it('should display a text with IMC when do click', () => {
@@ -69,12 +65,11 @@ describe('PersonComponent', () => {
     const expectedMsg = 'overweigth level';
     component.person = new Person('Juan', 'Perez', 30, 120, 1.65);
     const buttonDe = queryById(fixture, 'btn-imc');
-    const buttonEl: HTMLElement = buttonDe.nativeElement;
     // Act
     buttonDe.triggerEventHandler('click');
     fixture.detectChanges();
     // Assert
-    expect(buttonEl?.textContent).toContain(expectedMsg);
+    expect(getTextById(fixture, 'btn-imc')).toContain(expectedMsg);
   });
 
   it('should raise selected event when do click', () => {
@@ -125,8 +120,7 @@ describe('PersonComponent from HostComponent', () => {
 
   it('should display person name', () => {
     const expectedName = component.person.name;
-    const personEl: HTMLElement = query(fixture, 'app-person h3').nativeElement;
-    expect(personEl?.textContent).toContain(expectedName);
+    expect(getText(fixture, 'app-person h3')).toContain(expectedName);
   });
 
   it('should raise selected event when clicked', () => {
