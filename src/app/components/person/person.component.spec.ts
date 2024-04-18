@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { getText, getTextById, query, queryById } from 'src/testing';
+import { clickEventById, getText, getTextById, query, queryById } from 'src/testing';
 
 import { Person } from '../../models/person.model';
 import { PersonComponent } from './person.component';
@@ -64,9 +64,8 @@ describe('PersonComponent', () => {
     // Arrange
     const expectedMsg = 'overweigth level';
     component.person = new Person('Juan', 'Perez', 30, 120, 1.65);
-    const buttonDe = queryById(fixture, 'btn-imc');
     // Act
-    buttonDe.triggerEventHandler('click');
+    clickEventById(fixture, 'btn-imc');
     fixture.detectChanges();
     // Assert
     expect(getTextById(fixture, 'btn-imc')).toContain(expectedMsg);
@@ -76,11 +75,10 @@ describe('PersonComponent', () => {
     // Arrange
     const expectedPerson = new Person('Juan', 'Perez', 30, 120, 1.65);
     component.person = expectedPerson;
-    const buttonDe = queryById(fixture, 'btn-choose');
     let selectedPerson: Person | undefined;
     component.onSelected.subscribe((person) => (selectedPerson = person));
     // Act
-    buttonDe.triggerEventHandler('click');
+    clickEventById(fixture, 'btn-choose');
     fixture.detectChanges();
     // Assert
     expect(selectedPerson).toEqual(expectedPerson);
@@ -124,8 +122,7 @@ describe('PersonComponent from HostComponent', () => {
   });
 
   it('should raise selected event when clicked', () => {
-    const personDe = queryById(fixture, 'btn-choose');
-    personDe.triggerEventHandler('click');
+    clickEventById(fixture, 'btn-choose');
     expect(component.selectedPerson).toEqual(component.person);
   });
 });
