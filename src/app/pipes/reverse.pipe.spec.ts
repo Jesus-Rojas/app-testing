@@ -63,7 +63,7 @@ describe('ReversePipe from HostComponent', () => {
   });
 
   it('should apply reserve pipe when typing in the input', () => {
-    const inputEl: HTMLInputElement = query(fixture, 'input').nativeElement;
+    const inputEl = query(fixture, 'input').nativeElement as HTMLInputElement;
     expect(getText(fixture, 'p')).toEqual('');
     inputEl.value = 'amor';
     inputEl.dispatchEvent(new Event('input'));

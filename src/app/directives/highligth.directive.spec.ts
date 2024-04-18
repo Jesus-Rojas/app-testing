@@ -47,9 +47,9 @@ describe('HighligthDirective', () => {
     const elements: (Omit<DebugElement, 'nativeElement'> & { nativeElement: HTMLElement })[] = 
       queryAllByDirective(fixture, HighligthDirective);
 
-    expect(elements[0].nativeElement?.style.backgroundColor).toEqual('gray');
-    expect(elements[1].nativeElement?.style.backgroundColor).toEqual('yellow');
-    expect(elements[2].nativeElement?.style.backgroundColor).toEqual('blue');
+    expect(elements[0].nativeElement.style.backgroundColor).toEqual('gray');
+    expect(elements[1].nativeElement.style.backgroundColor).toEqual('yellow');
+    expect(elements[2].nativeElement.style.backgroundColor).toEqual('blue');
   });
 
   it('should the h5.title be defaultColor', () => {
@@ -61,7 +61,7 @@ describe('HighligthDirective', () => {
 
   it('should bind <input> and change the bgColor', () => {
     const inputDe = query(fixture, 'input');
-    const inputEl: HTMLInputElement = inputDe.nativeElement;
+    const inputEl = inputDe.nativeElement as HTMLInputElement;
     const highligthDirective = inputDe.injector.get(HighligthDirective);
     
     expect(inputEl.style.backgroundColor).toEqual(highligthDirective.defaultColor);

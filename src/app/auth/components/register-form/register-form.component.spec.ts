@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { UsersService } from '../../services/users.service';
 
+import { getTextById, query } from 'src/testing';
+import { UsersService } from '../../services/users.service';
 import { RegisterFormComponent } from './register-form.component';
 
 fdescribe('RegisterFormComponent', () => {
@@ -10,7 +11,7 @@ fdescribe('RegisterFormComponent', () => {
   let usersService: jasmine.SpyObj<UsersService>;
 
   beforeEach(async () => {
-    const usersServiceSpy = jasmine.createSpyObj('UsersService', ['getAll']);
+    const usersServiceSpy = jasmine.createSpyObj('UsersService', ['create']);
     await TestBed.configureTestingModule({
       imports: [ ReactiveFormsModule ],
       declarations: [ RegisterFormComponent ],
@@ -64,5 +65,18 @@ fdescribe('RegisterFormComponent', () => {
       checkTerms: false,
     });
     expect(component.form.invalid).toBeTruthy();
+  });
+
+  it('should the emailField be invalid from UI', async () => {
+    const inputDe = query(fixture, '#email');
+    const inputEl = inputDe.nativeElement as HTMLInputElement;
+
+    inputEl.value = 'esto no es un correo';
+    inputEl.dispatchEvent(new Event('input'));
+    inputEl.dispatchEvent(new Event('blur'));
+    fixture.detectChanges();
+
+    expect(component.emailField?.invalid).withContext('wrong email').toBeTruthy();  
+    expect(getTextById(fixture, 'emailField-email')).toContain("It's not a email");
   });
 });
