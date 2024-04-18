@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { HighligthDirective } from 'src/app/directives/highligth.directive';
+import { ReversePipe } from 'src/app/pipes/reverse.pipe';
 
 import { OthersComponent } from './others.component';
 
@@ -8,7 +11,8 @@ describe('OthersComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OthersComponent ]
+      declarations: [ OthersComponent, ReversePipe, HighligthDirective ],
+      imports: [ FormsModule ],
     })
     .compileComponents();
 
