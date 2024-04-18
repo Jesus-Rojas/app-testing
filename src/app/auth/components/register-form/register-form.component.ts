@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CreateUserDTO } from 'src/app/models/user.model';
+import { Status } from 'src/app/types/status.enum';
 import { MyValidators } from 'src/app/utils/validators';
 import { UsersService } from '../../services/users.service';
 
@@ -23,6 +24,8 @@ export class RegisterFormComponent {
     }
   );
 
+  status: Status = Status.Init;
+
   constructor(
     private fb: FormBuilder,
     private usersService: UsersService
@@ -37,9 +40,18 @@ export class RegisterFormComponent {
     }
 
     const value = this.form.value;
-    this.usersService.create(value as CreateUserDTO).subscribe((rta) => {
-      console.log(rta);
-    });
+    this.status = Status.Loading;
+    this.usersService
+      .create(value as CreateUserDTO)
+      .subscribe({
+        next: (rta) => {
+          this.status = Status.Success;
+          console.log(rta);
+        },
+        error: () => {
+          this.status = Status.Error;
+        }
+      });
   }
 
   get nameField() {
