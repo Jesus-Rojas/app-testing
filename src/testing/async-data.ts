@@ -12,7 +12,6 @@ export function promiseSuccess<T>(data: T) {
   return Promise.resolve(data);
 }
 
-
 export function promiseError(error?: unknown) {
   return Promise.reject(error);
 }
