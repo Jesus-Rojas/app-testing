@@ -1,10 +1,17 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
+
 import { generateOneUser } from 'src/app/mocks/user.mock';
 import { Status } from 'src/app/types/status.enum';
-
-import { getTextById, observableSuccess, query, setInputValue } from 'src/testing';
+import {
+  clickElementById,
+  getTextById,
+  observableSuccess,
+  query,
+  setCheckboxValue,
+  setInputValue,
+} from 'src/testing';
 import { UsersService } from '../../services/users.service';
 import { RegisterFormComponent } from './register-form.component';
 
@@ -118,6 +125,23 @@ fdescribe('RegisterFormComponent', () => {
     const mockUser = generateOneUser();
     usersService.create.and.returnValue(observableSuccess(mockUser));
     component.register();
+    expect(component.status).toEqual(Status.Loading);
+    tick();
+    expect(component.status).toEqual(Status.Success);
+    expect(component.form.valid).toBeTruthy();
+    expect(usersService.create).toHaveBeenCalled();
+  }));
+
+  it('should send the form successfully demo UI', fakeAsync(() => {
+    setInputValue(fixture, '#name', 'Jesus');
+    setInputValue(fixture, '#email', 'jesus@gmail.com');
+    setInputValue(fixture, '#password', '00000000');
+    setInputValue(fixture, '#confirmPassword', '00000000');
+    setCheckboxValue(fixture, '#terms', true);
+
+    const mockUser = generateOneUser();
+    usersService.create.and.returnValue(observableSuccess(mockUser));
+    clickElementById(fixture, 'btn-submit');
     expect(component.status).toEqual(Status.Loading);
     tick();
     expect(component.status).toEqual(Status.Success);
