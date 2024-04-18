@@ -1,13 +1,14 @@
-import { TestBed } from '@angular/core/testing';
-import { ProductsService } from './products.service';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { CreateProductDTO, Product, UpdateProductDTO } from '../models/product.model';
-import { environment } from '../../environments/environment';
-import { generateManyProducts, generateOneProduct } from '../models/product.mock';
-import * as _ from 'lodash';
 import { HttpStatusCode, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { TokenInterceptor } from '../interceptors/token.interceptor';
-import { TokenService } from './token.service';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import * as _ from 'lodash';
+
+import { ProductsService } from './products.service';
+import { CreateProductDTO, Product, UpdateProductDTO } from '../../models/product.model';
+import { generateManyProducts, generateOneProduct } from '../../models/product.mock';
+import { TokenInterceptor } from '../../interceptors/token.interceptor';
+import { environment } from 'src/environments/environment';
+import { TokenService } from 'src/app/services/token.service';
 
 describe('ProductsService', () => {
   let productsService: ProductsService;

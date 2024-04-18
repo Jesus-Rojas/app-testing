@@ -3,14 +3,12 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ProductsComponent } from './components/products/products.component';
 import { PicoPreviewComponent } from './components/pico-preview/pico-preview.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { PersonComponent } from './components/person/person.component';
 import { PeopleComponent } from './components/people/people.component';
-import { ProductComponent } from './components/product/product.component';
 import { HighligthDirective } from './directives/highligth.directive';
 import { OthersComponent } from './components/others/others.component';
 import { ReversePipe } from './pipes/reverse.pipe';
@@ -18,14 +16,12 @@ import { ReversePipe } from './pipes/reverse.pipe';
 @NgModule({
   declarations: [
     AppComponent,
-    ProductsComponent,
     PicoPreviewComponent,
     PersonComponent,
     PeopleComponent,
-    ProductComponent,
     HighligthDirective,
     OthersComponent,
-    ReversePipe
+    ReversePipe,
   ],
   imports: [
     BrowserModule,

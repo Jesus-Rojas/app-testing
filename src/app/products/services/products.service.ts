@@ -3,8 +3,8 @@ import { HttpClient, HttpParams, HttpErrorResponse, HttpStatusCode } from '@angu
 import { retry, catchError, map } from 'rxjs/operators';
 import { Observable, throwError, zip } from 'rxjs';
 
-import { Product, CreateProductDTO, UpdateProductDTO } from './../models/product.model';
-import { environment } from './../../environments/environment';
+import { Product, CreateProductDTO, UpdateProductDTO } from '../../models/product.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

@@ -1,14 +1,18 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { of } from 'rxjs';
 
 import { generateManyProducts } from 'src/app/models/product.mock';
-import { ProductsService } from 'src/app/services/products.service';
 import { ValueService } from 'src/app/services/value.service';
 import { Status } from 'src/app/types/status.enum';
-import { clickEventById, getTextById, observableError, observableSuccess, promiseSuccess, queryById } from 'src/testing';
+import {
+  clickEventById,
+  getTextById,
+  observableError,
+  observableSuccess,
+  promiseSuccess
+} from 'src/testing';
+import { ProductsService } from '../../services/products.service';
 import { ProductComponent } from '../product/product.component';
-
 import { ProductsComponent } from './products.component';
 
 describe('ProductsComponent', () => {
