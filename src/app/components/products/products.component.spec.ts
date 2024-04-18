@@ -6,7 +6,7 @@ import { generateManyProducts } from 'src/app/models/product.mock';
 import { ProductsService } from 'src/app/services/products.service';
 import { ValueService } from 'src/app/services/value.service';
 import { Status } from 'src/app/types/status.enum';
-import { getTextById, observableError, observableSuccess, promiseSuccess, queryById } from 'src/testing';
+import { clickEventById, getTextById, observableError, observableSuccess, promiseSuccess, queryById } from 'src/testing';
 import { ProductComponent } from '../product/product.component';
 
 import { ProductsComponent } from './products.component';
@@ -112,9 +112,8 @@ describe('ProductsComponent', () => {
       // Arrange
       const mockMessage = 'mock string';
       valueService.getPromiseValue.and.returnValue(promiseSuccess(mockMessage));
-      const btnDe = queryById(fixture, 'btn-promise');
       // Act
-      btnDe.triggerEventHandler('click');
+      clickEventById(fixture, 'btn-promise');
       tick();
       fixture.detectChanges();
 

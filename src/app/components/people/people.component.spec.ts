@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Person } from 'src/app/models/person.model';
-import { getSelectorOfTest, getText, queryAll, queryById } from 'src/testing';
+import { clickEventById, getSelectorOfTest, getText, queryAll, queryById } from 'src/testing';
 import { PersonComponent } from '../person/person.component';
 
 import { PeopleComponent } from './people.component';
@@ -36,14 +36,12 @@ describe('PeopleComponent', () => {
   });
 
   it('should raise selected event when clicked', () => {
-    const buttonDe = queryById(fixture, 'btn-choose');
-    buttonDe.triggerEventHandler('click');
+    clickEventById(fixture, 'btn-choose');
     expect(component.selectedPerson).toEqual(component.people[0]);
   });
 
   it('should render selectedPerson', () => {
-    const buttonDe = queryById(fixture, 'btn-choose');
-    buttonDe.triggerEventHandler('click');
+    clickEventById(fixture, 'btn-choose');
     fixture.detectChanges();
     expect(getText(fixture, `${getSelectorOfTest('selectedPerson')} ul > li`)).toContain(component.selectedPerson?.name);
   });
