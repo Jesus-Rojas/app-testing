@@ -44,9 +44,8 @@ export class RegisterFormComponent {
     this.usersService
       .create(value as CreateUserDTO)
       .subscribe({
-        next: (rta) => {
+        next: () => {
           this.status = Status.Success;
-          console.log(rta);
         },
         error: () => {
           this.status = Status.Error;

@@ -16,7 +16,7 @@ import {
 import { UsersService } from '../../services/users.service';
 import { RegisterFormComponent } from './register-form.component';
 
-fdescribe('RegisterFormComponent', () => {
+describe('RegisterFormComponent', () => {
   let component: RegisterFormComponent;
   let fixture: ComponentFixture<RegisterFormComponent>;
   let usersService: jasmine.SpyObj<UsersService>;
