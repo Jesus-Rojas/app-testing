@@ -1,11 +1,12 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { of, defer } from 'rxjs';
+import { of } from 'rxjs';
 
 import { generateManyProducts } from 'src/app/models/product.mock';
 import { ProductsService } from 'src/app/services/products.service';
 import { ValueService } from 'src/app/services/value.service';
 import { Status } from 'src/app/types/status.enum';
+import { observableError, observableSuccess, promiseSuccess } from 'src/testing';
 import { ProductComponent } from '../product/product.component';
 
 import { ProductsComponent } from './products.component';
@@ -69,7 +70,7 @@ describe('ProductsComponent', () => {
     it(`should change the status "${Status.Loading}" => "${Status.Success}"`, fakeAsync(() => {
       // Arrange
       const productsMock = generateManyProducts(10);
-      productsService.getAll.and.returnValue(defer(() => Promise.resolve(productsMock)));
+      productsService.getAll.and.returnValue(observableSuccess(productsMock));
       // Act
       component.getAllProducts();
       fixture.detectChanges();
@@ -82,7 +83,7 @@ describe('ProductsComponent', () => {
 
     it(`should change the status "${Status.Loading}" => "${Status.Error}"`, fakeAsync(() => {
       // Arrange
-      productsService.getAll.and.returnValue(defer(() => Promise.reject()));
+      productsService.getAll.and.returnValue(observableError());
       // Act
       component.getAllProducts();
       fixture.detectChanges();
@@ -98,7 +99,7 @@ describe('ProductsComponent', () => {
     it('should call to promise', async () => {
       // Arrange
       const mockMessage = 'mock string';
-      valueService.getPromiseValue.and.returnValue(Promise.resolve(mockMessage));
+      valueService.getPromiseValue.and.returnValue(promiseSuccess(mockMessage));
       // Act
       await component.callPromise();
       fixture.detectChanges();
@@ -110,7 +111,7 @@ describe('ProductsComponent', () => {
     it('should show "mock string" in <p> when btn was clicked', fakeAsync(() => {
       // Arrange
       const mockMessage = 'mock string';
-      valueService.getPromiseValue.and.returnValue(Promise.resolve(mockMessage));
+      valueService.getPromiseValue.and.returnValue(promiseSuccess(mockMessage));
       const btnDe = fixture.debugElement.query(By.css('.btn-promise'));
       // Act
       btnDe.triggerEventHandler('click');
