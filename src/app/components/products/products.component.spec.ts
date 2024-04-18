@@ -10,7 +10,7 @@ import { ProductComponent } from '../product/product.component';
 
 import { ProductsComponent } from './products.component';
 
-fdescribe('ProductsComponent', () => {
+describe('ProductsComponent', () => {
   let component: ProductsComponent;
   let fixture: ComponentFixture<ProductsComponent>;
   let productsService: jasmine.SpyObj<ProductsService>;
