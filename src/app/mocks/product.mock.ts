@@ -1,5 +1,5 @@
 import * as faker from 'faker';
-import { Product } from './product.model';
+import { Product } from '../models/product.model';
 
 export const generateOneProduct = (): Product => ({
   id: faker.datatype.uuid(),

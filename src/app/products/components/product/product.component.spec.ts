@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { generateOneProduct } from 'src/app/models/product.mock';
+import { generateOneProduct } from 'src/app/mocks/product.mock';
 
 import { ProductComponent } from './product.component';
 

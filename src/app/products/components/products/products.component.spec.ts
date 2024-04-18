@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { of } from 'rxjs';
+import { generateManyProducts } from 'src/app/mocks/product.mock';
 
-import { generateManyProducts } from 'src/app/models/product.mock';
 import { ValueService } from 'src/app/services/value.service';
 import { Status } from 'src/app/types/status.enum';
 import {

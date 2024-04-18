@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 
 import { ProductsService } from './products.service';
 import { CreateProductDTO, Product, UpdateProductDTO } from '../../models/product.model';
-import { generateManyProducts, generateOneProduct } from '../../models/product.mock';
+import { generateManyProducts, generateOneProduct } from '../../mocks/product.mock';
 import { TokenInterceptor } from '../../interceptors/token.interceptor';
 import { environment } from 'src/environments/environment';
 import { TokenService } from 'src/app/services/token.service';

@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
+import { generateOneUser } from 'src/app/mocks/user.mock';
 
 import { getTextById, query, setInputValue } from 'src/testing';
 import { UsersService } from '../../services/users.service';
@@ -86,4 +88,21 @@ fdescribe('RegisterFormComponent', () => {
     expect(component.emailField?.invalid).withContext('wrong email').toBeTruthy();  
     expect(getTextById(fixture, 'emailField-email')).toContain("It's not a email");
   });
+
+  it('should send the form successfully', () => {
+    component.form.patchValue({
+      name: 'Jesus',
+      email: 'jesus@gmail.com',
+      password: '00000000',
+      confirmPassword: '00000000',
+      checkTerms: true,
+    });
+
+    const mockUser = generateOneUser();
+    usersService.create.and.returnValue(of(mockUser));
+    component.register();
+    expect(component.form.valid).toBeTruthy();
+    expect(usersService.create).toHaveBeenCalled();
+  });
+
 });
