@@ -3,7 +3,7 @@ import { of } from 'rxjs';
 import { UsersService } from '../auth/services/users.service';
 import { MyValidators } from './validators';
 
-fdescribe('Tests for MyValidators', () => {
+describe('Tests for MyValidators', () => {
   describe('Tests for validPassword', () => {
     it('should return null when password is correct', () => {
       const control = new FormControl();
