@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -43,10 +43,11 @@ describe('HighligthDirective', () => {
   });
 
   it('should the elements be match with bgColor', () => {
-    const elements = fixture.debugElement.queryAll(By.directive(HighligthDirective));
-    expect((elements[0].nativeElement as HTMLElement).style.backgroundColor).toEqual('gray');
-    expect((elements[1].nativeElement as HTMLElement).style.backgroundColor).toEqual('yellow');
-    expect((elements[2].nativeElement as HTMLElement).style.backgroundColor).toEqual('blue');
+    const elements: (Omit<DebugElement, 'nativeElement'> & { nativeElement: HTMLElement })[] = 
+      fixture.debugElement.queryAll(By.directive(HighligthDirective));
+    expect(elements[0].nativeElement.style.backgroundColor).toEqual('gray');
+    expect(elements[1].nativeElement.style.backgroundColor).toEqual('yellow');
+    expect(elements[2].nativeElement.style.backgroundColor).toEqual('blue');
   });
 
   it('should the h5.title be defaultColor', () => {
