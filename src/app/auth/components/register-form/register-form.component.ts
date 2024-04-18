@@ -30,8 +30,7 @@ export class RegisterFormComponent {
 
   ngOnInit(): void {}
 
-  register(event: Event) {
-    event.preventDefault();
+  register() {
     if (!this.form.valid) {
       this.form.markAllAsTouched();
       return;
