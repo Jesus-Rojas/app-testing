@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { CreateUserDTO } from 'src/app/models/user.model';
 import { Status } from 'src/app/types/status.enum';
 import { MyValidators } from 'src/app/utils/validators';
@@ -32,7 +33,8 @@ export class RegisterFormComponent {
 
   constructor(
     private fb: FormBuilder,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {}
@@ -47,7 +49,10 @@ export class RegisterFormComponent {
     this.usersService
       .create(this.form.value as CreateUserDTO)
       .subscribe({
-        next: () => (this.status = Status.Success),
+        next: () => {
+          this.status = Status.Success;
+          this.router.navigateByUrl('/login');
+        },
         error: () => (this.status = Status.Error),
       });
   }

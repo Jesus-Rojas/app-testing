@@ -1,5 +1,6 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { generateOneUser } from 'src/app/mocks/user.mock';
@@ -16,13 +17,15 @@ import {
 import { UsersService } from '../../services/users.service';
 import { RegisterFormComponent } from './register-form.component';
 
-describe('RegisterFormComponent', () => {
+fdescribe('RegisterFormComponent', () => {
   let component: RegisterFormComponent;
   let fixture: ComponentFixture<RegisterFormComponent>;
   let usersService: jasmine.SpyObj<UsersService>;
+  let router: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
     const usersServiceSpy = jasmine.createSpyObj('UsersService', ['create', 'isAvailableByEmail']);
+    const routerSpy = jasmine.createSpyObj('Router', ['navigateByUrl']);
     await TestBed.configureTestingModule({
       imports: [ ReactiveFormsModule ],
       declarations: [ RegisterFormComponent ],
@@ -31,6 +34,10 @@ describe('RegisterFormComponent', () => {
           provide: UsersService,
           useValue: usersServiceSpy
         },
+        {
+          provide: Router,
+          useValue: routerSpy
+        },
       ],
     })
     .compileComponents();
@@ -38,6 +45,7 @@ describe('RegisterFormComponent', () => {
     fixture = TestBed.createComponent(RegisterFormComponent);
     component = fixture.componentInstance;
     usersService = TestBed.inject(UsersService) as jasmine.SpyObj<UsersService>;
+    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
     usersService.isAvailableByEmail.and.returnValue(of({ isAvailable: true }));
     fixture.detectChanges();
   });
@@ -132,6 +140,7 @@ describe('RegisterFormComponent', () => {
     expect(component.status).toEqual(Status.Success);
     expect(component.form.valid).toBeTruthy();
     expect(usersService.create).toHaveBeenCalled();
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/login');
   }));
 
   it('should send the form successfully demo UI', fakeAsync(() => {
