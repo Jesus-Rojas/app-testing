@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Product } from 'src/app/models/product.model';
+import { Status } from 'src/app/types/status.enum';
 import { ProductsService } from '../../services/products.service';
 
 @Component({
@@ -12,6 +13,7 @@ import { ProductsService } from '../../services/products.service';
 })
 export class ProductDetailComponent {
   product: Product | null = null;
+  status: Status = Status.Init;
 
   constructor(
     private route: ActivatedRoute,
@@ -25,21 +27,21 @@ export class ProductDetailComponent {
         const productId = params.get('id');
         if (productId) {
           this.getProductDetail(productId);
-        } else {
-          this.goToBack();
+          return;
         }
+        this.goToBack();
       });
   }
 
   private getProductDetail(productId: string) {
+    this.status = Status.Loading;
     this.productsService.getOne(productId)
     .subscribe({
       next: (product) => {
         this.product = product;
+        this.status = Status.Success;
       },
-      error: () => {
-        this.goToBack();
-      }
+      error: this.goToBack,
     })
   }
 

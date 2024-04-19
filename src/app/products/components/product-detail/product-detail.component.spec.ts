@@ -4,7 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { generateOneProduct } from 'src/app/mocks/product.mock';
-import { ActivatedRouteStub, getText, getTextById, query } from 'src/testing';
+import { Status } from 'src/app/types/status.enum';
+import { ActivatedRouteStub, getText, getTextById, observableSuccess, query } from 'src/testing';
 import { ProductsService } from '../../services/products.service';
 import { ProductDetailComponent } from './product-detail.component';
 
@@ -82,4 +83,21 @@ fdescribe('ProductDetailComponent', () => {
     fixture.detectChanges();
     expect(location.back).toHaveBeenCalled();
   });
+
+  it('should change the status "loading" => "success"', fakeAsync(() => {
+    const productId = '2';
+    activatedRoute.setParamMap({ id: productId });
+
+    const productMock = {
+      ...generateOneProduct(),
+      id: productId,
+    };
+    productsService.getOne.and.returnValue(observableSuccess(productMock));
+    
+    expect(component.status).toEqual(Status.Init);
+    fixture.detectChanges(); // Run ngOnInit
+    expect(component.status).toEqual(Status.Loading);
+    tick(); // Resolve productsService
+    expect(component.status).toEqual(Status.Success);
+  }));
 });
