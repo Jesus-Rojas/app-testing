@@ -14,7 +14,7 @@ class BannerComponentStub {}
 })
 class FooterComponentStub {}
 
-fdescribe('AppComponent', () => {
+describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
 
