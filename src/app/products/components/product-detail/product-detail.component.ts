@@ -14,6 +14,7 @@ import { ProductsService } from '../../services/products.service';
 export class ProductDetailComponent {
   product: Product | null = null;
   status: Status = Status.Init;
+  typeCustomer: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,6 +32,10 @@ export class ProductDetailComponent {
         }
         this.goToBack();
       });
+
+    this.route.queryParamMap.subscribe((params) => {
+      this.typeCustomer = params.get('type');
+    })
   }
 
   private getProductDetail(productId: string) {

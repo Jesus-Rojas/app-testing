@@ -100,4 +100,20 @@ fdescribe('ProductDetailComponent', () => {
     tick(); // Resolve productsService
     expect(component.status).toEqual(Status.Success);
   }));
+
+  it('should typeCustomer be "customer"', () => {
+    const productId = '2';
+    activatedRoute.setParamMap({ id: productId });
+    const type = 'customer';
+    activatedRoute.setQueryParamMap({ type });
+
+    const productMock = {
+      ...generateOneProduct(),
+      id: productId,
+    };
+    productsService.getOne.and.returnValue(of(productMock));
+    
+    fixture.detectChanges(); // Run ngOnInit
+    expect(component.typeCustomer).toEqual(type);
+  });
 });
