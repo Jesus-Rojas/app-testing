@@ -75,4 +75,11 @@ fdescribe('ProductDetailComponent', () => {
     expect(getTextById(fixture, 'price')).toContain(productMock.price);
     expect(productsService.getOne).toHaveBeenCalledWith(productId);
   });
+
+  it('should go to back without id params', () => {
+    activatedRoute.setParamMap({ });
+    location.back.and.callThrough();
+    fixture.detectChanges();
+    expect(location.back).toHaveBeenCalled();
+  });
 });
