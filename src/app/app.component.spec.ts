@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { getText } from 'src/testing';
+import { getText, queryAllByDirective, RouterLinkDirectiveStub } from 'src/testing';
 import { AppComponent } from './app.component';
 
-describe('AppComponent', () => {
+fdescribe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
 
@@ -13,7 +13,8 @@ describe('AppComponent', () => {
         RouterTestingModule
       ],
       declarations: [
-        AppComponent
+        AppComponent,
+        RouterLinkDirectiveStub,
       ],
     }).compileComponents();
 
@@ -32,5 +33,18 @@ describe('AppComponent', () => {
 
   it('should render title', () => {
     expect(getText(fixture, '.container h2')).toContain('Angular Testing');
+  });
+
+  it('should there are 7 routerLinks', () => {
+    const elements = queryAllByDirective(fixture, RouterLinkDirectiveStub);
+    expect(elements.length).toEqual(7);
+  });
+
+  it('should there are 7 routerLinks with match routes', () => {
+    const elements = queryAllByDirective(fixture, RouterLinkDirectiveStub);
+    const routerLinks = elements.map((element) => element.injector.get(RouterLinkDirectiveStub))
+    expect(elements.length).toEqual(7);
+    expect(routerLinks[0].linkParams).toEqual('/');
+    expect(routerLinks[1].linkParams).toEqual('/auth/register');
   });
 });

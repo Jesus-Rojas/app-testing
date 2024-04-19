@@ -9,7 +9,7 @@ import { ActivatedRouteStub, getText, getTextById, observableSuccess, query } fr
 import { ProductsService } from '../../services/products.service';
 import { ProductDetailComponent } from './product-detail.component';
 
-fdescribe('ProductDetailComponent', () => {
+describe('ProductDetailComponent', () => {
   let component: ProductDetailComponent;
   let fixture: ComponentFixture<ProductDetailComponent>;
   let productsService: jasmine.SpyObj<ProductsService>;
