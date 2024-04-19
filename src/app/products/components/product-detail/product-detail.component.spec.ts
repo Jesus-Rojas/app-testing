@@ -1,10 +1,10 @@
 import { Location } from '@angular/common';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
 import { generateOneProduct } from 'src/app/mocks/product.mock';
-import { ActivatedRouteStub } from 'src/testing';
+import { ActivatedRouteStub, getText, getTextById, query } from 'src/testing';
 import { ProductsService } from '../../services/products.service';
 import { ProductDetailComponent } from './product-detail.component';
 
@@ -44,7 +44,9 @@ fdescribe('ProductDetailComponent', () => {
     productsService = TestBed.inject(ProductsService) as jasmine.SpyObj<ProductsService>;
     activatedRoute = TestBed.inject(ActivatedRoute) as unknown as ActivatedRouteStub;
     location = TestBed.inject(Location) as jasmine.SpyObj<Location>;
+  });
 
+  it('should create', () => {
     const productId = '1';
     activatedRoute.setParamMap({ id: productId });
 
@@ -54,11 +56,23 @@ fdescribe('ProductDetailComponent', () => {
     };
     productsService.getOne.and.returnValue(of(productMock));
 
-
     fixture.detectChanges();
+    expect(component).toBeTruthy();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should show product in the view', () => {
+    const productId = '2';
+    activatedRoute.setParamMap({ id: productId });
+
+    const productMock = {
+      ...generateOneProduct(),
+      id: productId,
+    };
+    productsService.getOne.and.returnValue(of(productMock));
+
+    fixture.detectChanges();
+    expect(getTextById(fixture, 'title')).toContain(productMock.title);
+    expect(getTextById(fixture, 'price')).toContain(productMock.price);
+    expect(productsService.getOne).toHaveBeenCalledWith(productId);
   });
 });
