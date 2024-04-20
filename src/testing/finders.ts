@@ -2,7 +2,7 @@ import { DebugElement, Type } from "@angular/core";
 import { ComponentFixture } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
-type DebugElementCustom = Omit<DebugElement, 'nativeElement'> & { nativeElement: HTMLElement | HTMLInputElement };
+export type DebugElementCustom = Omit<DebugElement, 'nativeElement'> & { nativeElement: HTMLElement | HTMLInputElement };
 
 export function getSelectorOfTest(selectorId: string) {
   return `[data-test-id="${selectorId}"]`;
