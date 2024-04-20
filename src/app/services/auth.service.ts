@@ -30,7 +30,7 @@ export class AuthService {
 
   login(email: string, password: string) {
     return this.http
-      .post<Auth>(`${this.apiUrl}/login`, {email, password})
+      .post<Auth>(`${this.apiUrl}/login`, { email, password })
       .pipe(
         tap(({ access_token }) => this.tokenService.saveToken(access_token)),
       );
@@ -39,7 +39,7 @@ export class AuthService {
   getProfile() {
     return this.http.get<User>(`${this.apiUrl}/profile`)
     .pipe(
-      tap(user => this.user.next(user))
+      tap((user) => this.user.next(user))
     );
   }
 
