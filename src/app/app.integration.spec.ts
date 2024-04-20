@@ -5,6 +5,7 @@ import { of } from "rxjs";
 
 import {
   clickElementById,
+  getText,
   getTextById,
   observableSuccess,
   query,
@@ -17,6 +18,7 @@ import { ProductsService } from "./products/services/products.service";
 import { generateManyProducts } from "./mocks/product.mock";
 import { AuthService } from "./services/auth.service";
 import { generateOneUser } from "./mocks/user.mock";
+import { NgZone } from "@angular/core";
 
 describe('App Integration Test', () => {
   let component: AppComponent;
@@ -24,6 +26,7 @@ describe('App Integration Test', () => {
   let router: Router;
   let productsService: jasmine.SpyObj<ProductsService>;
   let authService: jasmine.SpyObj<AuthService>;
+  let ngZone: NgZone;
 
   beforeEach(fakeAsync(async () => {
     const productsServiceSpy = jasmine.createSpyObj('ProductsService', ['getAll']);
@@ -54,10 +57,15 @@ describe('App Integration Test', () => {
     productsService = TestBed.inject(ProductsService) as jasmine.SpyObj<ProductsService>;
     authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
     router = TestBed.inject(Router);
+    ngZone = TestBed.inject(NgZone);
     router.initialNavigation();
     tick();
     fixture.detectChanges();
   }));
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
+  });
 
   it('should create the app', () => {
     expect(component).toBeTruthy();
@@ -105,5 +113,25 @@ describe('App Integration Test', () => {
     fixture.detectChanges();
     expect(router.url).toEqual('/pico-preview');
     expect(query(fixture, 'app-pico-preview')).not.toBeNull();
+  }));
+
+  it('should lazy load the auth module', ((doneFn) => {
+    const url = '/auth/login';
+    ngZone.run(() => {
+      router.navigateByUrl(url)
+        .then(() => (expect(router.url).toBe(url)))
+        .catch((error) => console.error('Error during navigation:', error))
+        .finally(doneFn)
+    });
+  }));
+
+  it('should lazy load the products module', ((doneFn) => {
+    const url = '/products';
+    ngZone.run(() => {
+      router.navigateByUrl(url)
+        .then(() => (expect(router.url).toBe(url)))
+        .catch((error) => console.error('Error during navigation:', error))
+        .finally(doneFn)
+    });
   }));
 });
