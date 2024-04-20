@@ -4,10 +4,6 @@ import { UsersService } from '../auth/services/users.service';
 
 export class MyValidators {
 
-  static isPriceValid({ value }: AbstractControl) {
-    return value > 10000 ? null : { price_invalid: true };
-  }
-
   static validPassword({ value }: AbstractControl) {
     return containsNumber(value) ? null : { invalid_password: true };
   }
