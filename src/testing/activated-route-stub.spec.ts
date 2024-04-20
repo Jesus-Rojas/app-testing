@@ -8,21 +8,41 @@ describe('Tests for ActivatedRouteStub', () => {
     activatedRouteStub = new ActivatedRouteStub();
   });
 
-  it('Test for setParamMap', (doneFn) => {
-    const mock = { id: '222' };
-    activatedRouteStub.setParamMap(mock);
-    activatedRouteStub.paramMap.subscribe((value) => {
-      expect(value).toEqual(fakeParamMap(mock));
-      doneFn();
-    })
+  describe('Test for setParamMap', () => {
+    it('should set the paramMap correctly with params', (doneFn) => {
+      const params = { id: '222', name: 'test' };
+      activatedRouteStub.setParamMap(params);
+      activatedRouteStub.paramMap.subscribe((value) => {
+        expect(value).toEqual(fakeParamMap(params));
+        doneFn();
+      });
+    });
+  
+    it('should set the paramMap correctly with no params', (doneFn) => {
+      activatedRouteStub.setParamMap();
+      activatedRouteStub.paramMap.subscribe((value) => {
+        expect(value).toEqual(fakeParamMap({}));
+        doneFn();
+      });
+    });
   });
 
-  it('Test for setQueryParamMap', (doneFn) => {
-    const mock = { id: '222' };
-    activatedRouteStub.setQueryParamMap(mock);
-    activatedRouteStub.queryParamMap.subscribe((value) => {
-      expect(value).toEqual(fakeParamMap(mock));
-      doneFn();
-    })
+  describe('Test for setQueryParamMap', () => {
+    it('should set the queryParamMap correctly with params', (doneFn) => {
+      const queryParams = { page: '1', order: 'desc' };
+      activatedRouteStub.setQueryParamMap(queryParams);
+      activatedRouteStub.queryParamMap.subscribe((value) => {
+        expect(value).toEqual(fakeParamMap(queryParams));
+        doneFn();
+      });
+    });
+  
+    it('should set the queryParamMap correctly with no params', (doneFn) => {
+      activatedRouteStub.setQueryParamMap();
+      activatedRouteStub.queryParamMap.subscribe((value) => {
+        expect(value).toEqual(fakeParamMap({}));
+        doneFn();
+      });
+    });
   });
 });
