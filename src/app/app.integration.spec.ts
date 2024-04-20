@@ -1,3 +1,4 @@
+import { NgZone } from "@angular/core";
 import { ComponentFixture, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { Router, RouterLinkWithHref } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -18,7 +19,6 @@ import { ProductsService } from "./products/services/products.service";
 import { generateManyProducts } from "./mocks/product.mock";
 import { AuthService } from "./services/auth.service";
 import { generateOneUser } from "./mocks/user.mock";
-import { NgZone } from "@angular/core";
 
 describe('App Integration Test', () => {
   let component: AppComponent;
