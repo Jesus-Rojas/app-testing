@@ -1,40 +1,11 @@
-import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { Router, RouterLinkWithHref } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
 
 import { clickElementById, query, queryAllByDirective } from "src/testing";
 import { AppComponent } from "./app.component";
-
-@Component({
-  selector: 'app-pico-preview'
-})
-class PicoPreviewComponent {}
-
-@Component({
-  selector: 'app-people'
-})
-class PeopleComponent {}
-
-@Component({
-  selector: 'app-others'
-})
-class OthersComponent {}
-
-const routes = [
-  {
-    path: 'pico-preview',
-    component: PicoPreviewComponent
-  },
-  {
-    path: 'people',
-    component: PeopleComponent
-  },
-  {
-    path: 'others',
-    component: OthersComponent
-  },
-];
+import { routes } from "./app-routing.module";
+import { AppModule } from "./app.module";
 
 fdescribe('App Integration Test', () => {
   let component: AppComponent;
@@ -44,15 +15,9 @@ fdescribe('App Integration Test', () => {
   beforeEach(fakeAsync(async () => {
     await TestBed.configureTestingModule({
       imports: [
+        AppModule,
         RouterTestingModule.withRoutes(routes),
       ],
-      declarations: [
-        AppComponent,
-        PicoPreviewComponent,
-        PeopleComponent,
-        OthersComponent,
-      ],
-      schemas: [ NO_ERRORS_SCHEMA ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
@@ -81,5 +46,13 @@ fdescribe('App Integration Test', () => {
     fixture.detectChanges();
     expect(router.url).toEqual('/others');
     expect(query(fixture, 'app-others')).not.toBeNull();
+  }));
+
+  it('should render PicoPreviewComponent when clicked', fakeAsync(() => {
+    clickElementById(fixture, 'pico-preview-link');
+    tick();
+    fixture.detectChanges();
+    expect(router.url).toEqual('/pico-preview');
+    expect(query(fixture, 'app-pico-preview')).not.toBeNull();
   }));
 });
