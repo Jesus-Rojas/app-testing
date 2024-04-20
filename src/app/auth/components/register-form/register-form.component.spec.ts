@@ -160,6 +160,16 @@ describe('RegisterFormComponent', () => {
     expect(usersService.create).toHaveBeenCalled();
   }));
 
+  it('should send the form invalid from demo UI', (() => {
+    setInputValue(fixture, '#name', 'Jesus');
+    setInputValue(fixture, '#email', 'jesus.com');
+    setInputValue(fixture, '#password', '00000000');
+    setInputValue(fixture, '#confirmPassword', '00000000');
+    setCheckboxValue(fixture, '#terms', true);
+    clickElementById(fixture, 'btn-submit');
+    expect(component.form.invalid).toBeTruthy();
+  }));
+
   it('should send the form demo UI but with error in the service', fakeAsync(() => {
     setInputValue(fixture, '#name', 'Jesus');
     setInputValue(fixture, '#email', 'jesus@gmail.com');

@@ -61,10 +61,6 @@ export class RegisterFormComponent {
     return this.form.get('name');
   }
 
-  get lastNameField() {
-    return this.form.get('lastName');
-  }
-
   get emailField() {
     return this.form.get('email');
   }
