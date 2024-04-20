@@ -1,23 +1,33 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { Router, RouterLinkWithHref } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
+import { of } from "rxjs";
 
-import { clickElementById, getTextById, observableSuccess, query, queryAllByDirective } from "src/testing";
+import {
+  clickElementById,
+  getTextById,
+  observableSuccess,
+  query,
+  queryAllByDirective
+} from "src/testing";
 import { AppComponent } from "./app.component";
 import { routes } from "./app-routing.module";
 import { AppModule } from "./app.module";
 import { ProductsService } from "./products/services/products.service";
-import { of } from "rxjs";
 import { generateManyProducts } from "./mocks/product.mock";
+import { AuthService } from "./services/auth.service";
+import { generateOneUser } from "./mocks/user.mock";
 
 fdescribe('App Integration Test', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
   let router: Router;
   let productsService: jasmine.SpyObj<ProductsService>;
+  let authService: jasmine.SpyObj<AuthService>;
 
   beforeEach(fakeAsync(async () => {
     const productsServiceSpy = jasmine.createSpyObj('ProductsService', ['getAll']);
+    const authServiceSpy = jasmine.createSpyObj('AuthService', ['getCurrentUser']);
 
     await TestBed.configureTestingModule({
       imports: [
@@ -29,6 +39,10 @@ fdescribe('App Integration Test', () => {
           provide: ProductsService,
           useValue: productsServiceSpy,
         },
+        {
+          provide: AuthService,
+          useValue: authServiceSpy,
+        },
       ],
     }).compileComponents();
 
@@ -38,6 +52,7 @@ fdescribe('App Integration Test', () => {
 
     // providers
     productsService = TestBed.inject(ProductsService) as jasmine.SpyObj<ProductsService>;
+    authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
     router = TestBed.inject(Router);
     router.initialNavigation();
     tick();
@@ -53,9 +68,11 @@ fdescribe('App Integration Test', () => {
     expect(elements.length).toEqual(7);
   });
 
-  it('should render OthersComponent when clicked', fakeAsync(() => {
+  it('should render OthersComponent when clicked with session', fakeAsync(() => {
     const productsMock = generateManyProducts(10);
     productsService.getAll.and.returnValue(observableSuccess(productsMock));
+    const userMock = generateOneUser();
+    authService.user$ = of(userMock);
     
     clickElementById(fixture, 'others-link');
     tick(); // wait while nav ...
@@ -66,6 +83,20 @@ fdescribe('App Integration Test', () => {
     expect(router.url).toEqual('/others');
     expect(query(fixture, 'app-others')).not.toBeNull();
     expect(getTextById(fixture, 'products-length')).toContain(productsMock.length);
+  }));
+
+  it('should render OthersComponent when clicked without session', fakeAsync(() => {
+    authService.user$ = of(null);
+    
+    clickElementById(fixture, 'others-link');
+
+    tick(); // wait while nav ...
+    fixture.detectChanges();
+
+    tick(); // exec productsService.getAll()
+    fixture.detectChanges(); // update html
+
+    expect(router.url).toEqual('/');
   }));
 
   it('should render PicoPreviewComponent when clicked', fakeAsync(() => {
