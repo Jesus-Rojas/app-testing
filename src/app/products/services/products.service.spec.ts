@@ -9,6 +9,7 @@ import { generateManyProducts, generateOneProduct } from '../../mocks/product.mo
 import { TokenInterceptor } from '../../interceptors/token.interceptor';
 import { environment } from 'src/environments/environment';
 import { TokenService } from 'src/app/services/token.service';
+import { of } from 'rxjs';
 
 describe('ProductsService', () => {
   let productsService: ProductsService;
@@ -113,25 +114,21 @@ describe('ProductsService', () => {
 
     it('should send query params with limit 10 and offset 3', (doneFn) => {
       const mockData: Product[] = generateManyProducts(3);
-      const limit = 10;
-      const offset = 3;
-      const parseToQueryParams = (object: Record<string, unknown>) => {
-        return Object.keys(object)
-          .reduce<string[]>((acc, key) => ([...acc, `${key}=${object[key]}`]), [])
-          .join('&');
-      }
+      const limit = '10';
+      const offset = '3';
 
-      productsService.getAll(limit, offset).subscribe((products) => {
+      productsService.getAll(+limit, +offset).subscribe((products) => {
         expect(products.length).toEqual(mockData.length);
         doneFn();
       });
-
-      const url = `${environment.API_URL}/api/v1/products?${parseToQueryParams({ limit, offset })}`;
+      
+      const queryParams = new URLSearchParams({ limit, offset }).toString();
+      const url = `${environment.API_URL}/api/v1/products?${queryParams}`;
       const req = httpController.expectOne(url);
       req.flush(mockData);
       const params = req.request.params;
-      expect(params.get('limit')).toEqual(limit.toString());
-      expect(params.get('offset')).toEqual(offset.toString());
+      expect(params.get('limit')).toEqual(limit);
+      expect(params.get('offset')).toEqual(offset);
     });
   });
 
@@ -213,13 +210,8 @@ describe('ProductsService', () => {
       expect(req.request.method).toEqual('GET');
     });
 
-    it('should return the right msg when the status code is 404', (doneFn) => {
+    it(`should return the right msg when the status code is ${HttpStatusCode.NotFound}`, (doneFn) => {
       const productId = '1';
-      const msgError = '404 message';
-      const mockError = {
-        status: HttpStatusCode.NotFound,
-        statusText: msgError,
-      };
 
       productsService.getOne(productId)
         .subscribe({
@@ -231,8 +223,125 @@ describe('ProductsService', () => {
 
       const url = `${environment.API_URL}/api/v1/products/${productId}`;
       const req = httpController.expectOne(url);
-      req.flush(msgError, mockError);
+      req.flush('', { status: HttpStatusCode.NotFound, statusText: '' });
       expect(req.request.method).toEqual('GET');
     });
+
+    it(`should return the right msg when the status code is ${HttpStatusCode.Conflict}`, (doneFn) => {
+      const productId = '1';
+
+      productsService.getOne(productId)
+        .subscribe({
+          error: (error) => {
+            expect(error).toEqual('Algo esta fallando en el server');
+            doneFn();
+          },
+        });
+
+      const url = `${environment.API_URL}/api/v1/products/${productId}`;
+      const req = httpController.expectOne(url);
+      req.flush('', { status: HttpStatusCode.Conflict, statusText: '' });
+      expect(req.request.method).toEqual('GET');
+    });
+
+    it(`should return the right msg when the status code is ${HttpStatusCode.Unauthorized}`, (doneFn) => {
+      const productId = '1';
+
+      productsService.getOne(productId)
+        .subscribe({
+          error: (error) => {
+            expect(error).toEqual('No estas permitido');
+            doneFn();
+          },
+        });
+
+      const url = `${environment.API_URL}/api/v1/products/${productId}`;
+      const req = httpController.expectOne(url);
+      req.flush('', { status: HttpStatusCode.Unauthorized, statusText: '' });
+      expect(req.request.method).toEqual('GET');
+    });
+
+    it(`should return the right msg when the status code is ${HttpStatusCode.TooManyRequests}`, (doneFn) => {
+      const productId = '1';
+
+      productsService.getOne(productId)
+        .subscribe({
+          error: (error) => {
+            expect(error).toEqual('Ups algo salio mal');
+            doneFn();
+          },
+        });
+
+      const url = `${environment.API_URL}/api/v1/products/${productId}`;
+      const req = httpController.expectOne(url);
+      req.flush('', { status: HttpStatusCode.TooManyRequests, statusText: '' });
+      expect(req.request.method).toEqual('GET');
+    });
+  });
+  
+
+  describe('tests for updateImages', () => {
+    it('should parse and clean product images list and should filter out products with invalid or placeholder images', () => {
+      const urlImageExpected = 'https://invalid-image.com/product.jpg';
+      const expectedId = '123';
+      const productsMocked = generateManyProducts(3);
+      productsMocked[0].images = [`["${urlImageExpected}", "https://valid-image.com/product2.jpg"]`];
+      productsMocked[1].images = ['https://placeimg.com/640/480/any'];
+      productsMocked[2].id = expectedId;
+
+      const products = productsService.updateImages(productsMocked);
+
+      expect(products[0].images[0]).toEqual(urlImageExpected);
+      expect(products[1].id).toEqual(expectedId);
+    });
+  });
+
+  describe('tests for getByCategory', () => {
+    it('should return products by categoryId, without offset and without limit', () => {
+      const categoryId = '1';
+      const mockProducts = generateManyProducts();
+
+      productsService.getByCategory(categoryId).subscribe((products) => {
+        expect(products.length).toEqual(mockProducts.length);
+      });
+
+      const url = `${environment.API_URL}/api/v1/categories/${categoryId}/products`;
+      const req = httpController.expectOne(url);
+      req.flush(mockProducts);
+    });
+
+    it('should return products by categoryId, with offset and with limit', () => {
+      const categoryId = '1';
+      const mockProducts = generateManyProducts();
+      const limit = '10';
+      const offset = '1';
+
+      productsService.getByCategory(categoryId, +limit, +offset).subscribe((products) => {
+        expect(products.length).toEqual(mockProducts.length);
+      });
+
+      const queryParams = new URLSearchParams({ limit, offset }).toString();
+      const url = `${environment.API_URL}/api/v1/categories/${categoryId}/products?${queryParams}`;
+      const req = httpController.expectOne(url);
+      req.flush(mockProducts);
+
+      const { params } = req.request;
+      expect(params.get('limit')).toEqual(limit);
+      expect(params.get('offset')).toEqual(offset);
+    });
+  });
+
+  it('test for fetchReadAndUpdate', (doneFn) => {
+    const productMock = { ...generateOneProduct(), id: '1' };
+    const dto = { title: 'example' };
+    const getOneSpy = spyOn(productsService, 'getOne').and.returnValue(of(productMock));
+    const updateSpy = spyOn(productsService, 'update').and.returnValue(of({ ...productMock, ...dto }));
+    productsService
+      .fetchReadAndUpdate(productMock.id, dto)
+      .subscribe(() => {
+        expect(getOneSpy).toHaveBeenCalled();
+        expect(updateSpy).toHaveBeenCalled();
+        doneFn();
+      });
   });
 });

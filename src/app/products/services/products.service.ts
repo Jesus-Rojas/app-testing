@@ -23,7 +23,7 @@ export class ProductsService {
       'https://placeimg.com/640/640/any',
       'https://placeimg.com/640/48',
       'https://img.com/64/1222',
-      'https://image.com'
+      'https://image.com',
     ];
 
     products = products.map(product => {
