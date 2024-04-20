@@ -10,7 +10,7 @@ import { TokenService } from '../services/token.service';
 
 import { AuthGuard } from './auth.guard'
 
-fdescribe('AuthGuard', () => {
+describe('AuthGuard', () => {
   let guard: AuthGuard;
   let tokenService: jasmine.SpyObj<TokenService>;
   let authService: jasmine.SpyObj<AuthService>;
