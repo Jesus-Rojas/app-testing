@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { generateOneProduct } from 'src/app/mocks/product.mock';
 
+import { generateOneProduct } from '../../../mocks/product.mock';
+import { RouterLinkDirectiveStub } from '../../../../testing';
 import { ProductComponent } from './product.component';
 
 describe('ProductComponent', () => {
@@ -9,7 +10,7 @@ describe('ProductComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProductComponent ]
+      declarations: [ ProductComponent, RouterLinkDirectiveStub ],
     })
     .compileComponents();
 

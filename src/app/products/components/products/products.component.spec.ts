@@ -1,16 +1,17 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { of } from 'rxjs';
-import { generateManyProducts } from 'src/app/mocks/product.mock';
 
-import { ValueService } from 'src/app/services/value.service';
-import { Status } from 'src/app/types/status.enum';
+import { generateManyProducts } from '../../../mocks/product.mock';
+import { ValueService } from '../../../services/value.service';
+import { Status } from '../../../types/status.enum';
 import {
   clickEventById,
   getTextById,
   observableError,
   observableSuccess,
-  promiseSuccess
-} from 'src/testing';
+  promiseSuccess,
+  RouterLinkDirectiveStub
+} from '../../../../testing';
 import { ProductsService } from '../../services/products.service';
 import { ProductComponent } from '../product/product.component';
 import { ProductsComponent } from './products.component';
@@ -29,6 +30,7 @@ describe('ProductsComponent', () => {
       declarations: [
         ProductsComponent,
         ProductComponent,
+        RouterLinkDirectiveStub,
       ],
       providers: [
         {

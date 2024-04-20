@@ -9,7 +9,7 @@ import {
   observableSuccess,
   query,
   queryAllByDirective
-} from "src/testing";
+} from "../testing";
 import { AppComponent } from "./app.component";
 import { routes } from "./app-routing.module";
 import { AppModule } from "./app.module";
@@ -18,7 +18,7 @@ import { generateManyProducts } from "./mocks/product.mock";
 import { AuthService } from "./services/auth.service";
 import { generateOneUser } from "./mocks/user.mock";
 
-fdescribe('App Integration Test', () => {
+describe('App Integration Test', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
   let router: Router;
