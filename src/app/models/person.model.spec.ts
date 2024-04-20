@@ -15,23 +15,43 @@ describe('Tests for Person', () => {
 
   describe('test for calcIMC', () => {
     it('Sholud be return a string: down', () => {
-      // Arrange
       person.weigth = 40;
-      person.heigth = 1.65;
-      // Act
-      const rta = person.calcIMC();
-      // Assert
-      expect(rta).toEqual('down');
+      expect(person.calcIMC()).toEqual('down');
     });
 
     it('Sholud be return a string: normal', () => {
-      // Arrange
       person.weigth = 58;
-      person.heigth = 1.65;
-      // Act
-      const rta = person.calcIMC();
-      // Assert
-      expect(rta).toEqual('normal');
+      expect(person.calcIMC()).toEqual('normal');
+    });
+
+    it('Sholud be return a string: not found', () => {
+      person.weigth = -58;
+      expect(person.calcIMC()).toEqual('not found');
+    });
+
+    it('Sholud be return a string: not found', () => {
+      person.weigth = -58;
+      expect(person.calcIMC()).toEqual('not found');
+    });
+
+    it('Sholud be return a string: overweigth', () => {
+      person.weigth = 68;
+      expect(person.calcIMC()).toEqual('overweigth');
+    });
+
+    it('Sholud be return a string: overweigth level 1', () => {
+      person.weigth = 78;
+      expect(person.calcIMC()).toEqual('overweigth level 1');
+    });
+
+    it('Sholud be return a string: overweigth level 2', () => {
+      person.weigth = 88;
+      expect(person.calcIMC()).toEqual('overweigth level 2');
+    });
+
+    it('Sholud be return a string: overweigth level 3', () => {
+      person.weigth = 118;
+      expect(person.calcIMC()).toEqual('overweigth level 3');
     });
   });
 });
