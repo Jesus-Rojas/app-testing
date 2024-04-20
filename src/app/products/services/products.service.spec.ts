@@ -18,7 +18,7 @@ describe('ProductsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule
+        HttpClientTestingModule,
       ],
       providers: [
         ProductsService,
@@ -26,8 +26,8 @@ describe('ProductsService', () => {
         {
           provide: HTTP_INTERCEPTORS,
           useClass: TokenInterceptor,
-          multi: true
-        }
+          multi: true,
+        },
       ]
     });
 

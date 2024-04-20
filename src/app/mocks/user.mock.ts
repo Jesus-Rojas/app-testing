@@ -8,3 +8,7 @@ export const generateOneUser = (): User => ({
   name: `${faker.name.firstName()} ${faker.name.lastName()}`,
   role: 'customer'
 });
+
+export const generateManyUsers = (size = 10): User[] => (
+  new Array(size).fill(null).map(generateOneUser)
+);
