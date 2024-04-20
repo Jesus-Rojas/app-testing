@@ -3,7 +3,7 @@ import { getTestBed, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 
-import { fakeActivatedRouteSnapshot, fakeRouterStateSnapshot } from 'src/testing';
+import { fakeActivatedRouteSnapshot, fakeParamMap, fakeRouterStateSnapshot } from 'src/testing';
 import { generateOneUser } from '../mocks/user.mock';
 import { AuthService } from '../services/auth.service';
 import { TokenService } from '../services/token.service';
@@ -52,18 +52,47 @@ fdescribe('AuthGuard', () => {
   it('should return true with session', (doneFn) => {
     const userMock = generateOneUser();
     authService.user$ = of(userMock);
+    const activatedRoute = fakeActivatedRouteSnapshot({
+      paramMap: fakeParamMap({
+        idProduct: '123213',
+      }),
+    });
+    const routerState = fakeRouterStateSnapshot();
     guard
-      .canActivate(fakeActivatedRouteSnapshot(), fakeRouterStateSnapshot())
+      .canActivate(activatedRoute, routerState)
       .subscribe((rta) => {
         expect(rta).toBeTruthy();
         doneFn();
       });
   });
 
-  it('should return true without session', (doneFn) => {
+  it('should return false without session', (doneFn) => {
     authService.user$ = of(null);
+    const activatedRoute = fakeActivatedRouteSnapshot({
+      paramMap: fakeParamMap({
+        idProduct: '123213',
+      }),
+    });
+    const routerState = fakeRouterStateSnapshot();
     guard
-      .canActivate(fakeActivatedRouteSnapshot(), fakeRouterStateSnapshot())
+      .canActivate(activatedRoute, routerState)
+      .subscribe((rta) => {
+        expect(rta).toBeFalsy();
+        expect(router.navigate).toHaveBeenCalledWith(['/home']);
+        doneFn();
+      });
+  });
+
+  it('should return false with idProduct Params', (doneFn) => {
+    authService.user$ = of(null);
+    const activatedRoute = fakeActivatedRouteSnapshot({
+      paramMap: fakeParamMap({
+        idProduct: '123213',
+      }),
+    });
+    const routerState = fakeRouterStateSnapshot();
+    guard
+      .canActivate(activatedRoute, routerState)
       .subscribe((rta) => {
         expect(rta).toBeFalsy();
         expect(router.navigate).toHaveBeenCalledWith(['/home']);
