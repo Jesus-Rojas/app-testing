@@ -71,9 +71,9 @@ describe('App Integration Test', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should there are 7 routerLinks', () => {
+  it('should there are 8 routerLinks', () => {
     const elements = queryAllByDirective(fixture, RouterLinkWithHref);
-    expect(elements.length).toEqual(7);
+    expect(elements.length).toEqual(8);
   });
 
   it('should render OthersComponent when clicked with session', fakeAsync(() => {

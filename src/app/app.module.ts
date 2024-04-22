@@ -14,6 +14,7 @@ import { OthersComponent } from './components/others/others.component';
 import { ReversePipe } from './pipes/reverse.pipe';
 import { BannerComponent } from './components/banner/banner.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { CoverageComponent } from './components/coverage/coverage.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { FooterComponent } from './components/footer/footer.component';
     ReversePipe,
     BannerComponent,
     FooterComponent,
+    CoverageComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CoverageComponent } from './components/coverage/coverage.component';
 import { OthersComponent } from './components/others/others.component';
 import { PeopleComponent } from './components/people/people.component';
 import { PicoPreviewComponent } from './components/pico-preview/pico-preview.component';
@@ -13,6 +14,10 @@ export const routes: Routes = [
   {
     path: 'people',
     component: PeopleComponent
+  },
+  {
+    path: 'coverage',
+    component: CoverageComponent
   },
   {
     path: 'others',

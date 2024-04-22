@@ -49,15 +49,15 @@ describe('AppComponent', () => {
     expect(getText(fixture, '.container h2')).toContain('Angular Testing');
   });
 
-  it('should there are 7 routerLinks', () => {
+  it('should there are 8 routerLinks', () => {
     const elements = queryAllByDirective(fixture, RouterLinkDirectiveStub);
-    expect(elements.length).toEqual(7);
+    expect(elements.length).toEqual(8);
   });
 
-  it('should there are 7 routerLinks with match routes', () => {
+  it('should there are 8 routerLinks with match routes', () => {
     const elements = queryAllByDirective(fixture, RouterLinkDirectiveStub);
     const routerLinks = elements.map((element) => element.injector.get(RouterLinkDirectiveStub))
-    expect(elements.length).toEqual(7);
+    expect(elements.length).toEqual(8);
     expect(routerLinks[0].linkParams).toEqual('/');
     expect(routerLinks[1].linkParams).toEqual('/auth/register');
   });
